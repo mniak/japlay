@@ -51,13 +51,13 @@ jobs:
       - name: Pack files
         run: |
           mkdir -p release/
-          tar -cvf release/japlay-${{ matrix.slug }}.tar.gz build/japlay
+          tar -cvf release/japlay-${{github.ref_name}}-${{ matrix.slug }}.tar.gz build/japlay
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: release-${{ matrix.slug }}
-          path: release/japlay-${{ matrix.slug }}.tar.gz
+          path: release/japlay-${{github.ref_name}}-${{ matrix.slug }}.tar.gz
 
   build-windows:
     runs-on: ubuntu-latest
@@ -116,13 +116,13 @@ jobs:
           unzip -o SDL2_mixer-2.6.3-win32-x64.zip
 
           mkdir -p release/
-          zip -j release/japlay-windows.zip build/japlay.exe SDL2*.dll
+          zip -j release/japlay-${{github.ref_name}}-windows.zip build/japlay.exe SDL2*.dll
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: release-windows
-          path: release/japlay-windows.zip
+          path: release/japlay-${{github.ref_name}}-windows.zip
 
   release:
     name: Create Github Release
@@ -154,7 +154,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            release/japlay-linux.tar.gz
-            release/japlay-darwin.tar.gz
-            release/japlay-windows.zip
+            release/japlay-${{github.ref_name}}-linux.tar.gz
+            release/japlay-${{github.ref_name}}-darwin.tar.gz
+            release/japlay-${{github.ref_name}}-windows.zip
             LICENSE
