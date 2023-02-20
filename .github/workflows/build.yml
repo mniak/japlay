@@ -23,11 +23,11 @@ jobs:
           go-version: "1.20.1"
 
       - name: Install SDL2 on Ubuntu
-        run: sudo apt-get install libsdl2{,-image,-mixer,-ttf,-gfx}-dev
+        run: sudo apt-get install libsdl2{,-image,-mixer,-ttf}-dev
         if: matrix.os == 'ubuntu-latest'
 
       - name: Install SDL2 on MacOS
-        run: brew install sdl2{,_image,_mixer,_ttf,_gfx} pkg-config
+        run: brew install sdl2{,_image,_mixer,_ttf} pkg-config
         if: matrix.os == 'macos-latest'
 
       - name: Download dependencies
@@ -70,28 +70,50 @@ jobs:
       - name: Install MinGW and SDL2
         run: |
           sudo apt-get install mingw-w64
+          mkdir SDL2/
+          cd SDL2/
           wget https://github.com/libsdl-org/SDL/releases/download/release-2.26.3/SDL2-devel-2.26.3-mingw.tar.gz
+          wget https://github.com/libsdl-org/SDL_ttf/releases/download/release-2.20.2/SDL2_ttf-devel-2.20.2-mingw.tar.gz
+          wget https://github.com/libsdl-org/SDL_image/releases/download/release-2.6.3/SDL2_image-devel-2.6.3-mingw.tar.gz
+          wget https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.6.3/SDL2_mixer-devel-2.6.3-mingw.tar.gz
+         
           tar -xvf SDL2-devel-2.26.3-mingw.tar.gz
-          sudo cp -R SDL2-2.26.3/x86_64-w64-mingw32/* /usr/x86_64-w64-mingw32
+          tar -xvf SDL2_ttf-devel-2.20.2-mingw.tar.gz
+          tar -xvf SDL2_image-devel-2.6.3-mingw.tar.gz
+          tar -xvf SDL2_mixer-devel-2.6.3-mingw.tar.gz
 
-      - name: Download dependencies
-        run: go mod download -x
+          sudo cp -R SDL2-2.26.3/x86_64-w64-mingw32/* /usr/x86_64-w64-mingw32/
+          sudo cp -R SDL2_ttf-2.20.2/x86_64-w64-mingw32/* /usr/x86_64-w64-mingw32/
+          sudo cp -R SDL2_image-2.6.3/x86_64-w64-mingw32/* /usr/x86_64-w64-mingw32/
+          sudo cp -R SDL2_mixer-2.6.3/x86_64-w64-mingw32/* /usr/x86_64-w64-mingw32/
+
+          cd ..
 
       - name: Build
         timeout-minutes: 10
         run: |
           mkdir -p build/
+          export CGO_ENABLED="1"
+          export CC="/usr/bin/x86_64-w64-mingw32-gcc"
+          export GOOS="windows"
+          export CGO_LDFLAGS="-lmingw32 -lSDL2"
+          export CGO_CFLAGS="-D_REENTRANT"
           go build -x -o build/japlay.exe ./cmd/
-
-      - name: Test
-        run: go test -v ./... -coverprofile=coverage.txt -covermode=atomic
 
       - name: Pack files
         run: |
           wget https://github.com/libsdl-org/SDL/releases/download/release-2.26.3/SDL2-2.26.3-win32-x64.zip
-          unzip SDL2-2.26.3-win32-x64.zip 
+          wget https://github.com/libsdl-org/SDL_ttf/releases/download/release-2.20.2/SDL2_ttf-2.20.2-win32-x64.zip
+          wget https://github.com/libsdl-org/SDL_image/releases/download/release-2.6.3/SDL2_image-2.6.3-win32-x64.zip
+          wget https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.6.3/SDL2_mixer-2.6.3-win32-x64.zip
+
+          unzip -o SDL2-2.26.3-win32-x64.zip
+          unzip -o SDL2_ttf-2.20.2-win32-x64.zip
+          unzip -o SDL2_image-2.6.3-win32-x64.zip
+          unzip -o SDL2_mixer-2.6.3-win32-x64.zip
+
           mkdir -p release/
-          tar -cvf release/japlay-windows.zip build/japlay.exe SDL2.dll
+          zip -j release/japlay-windows.zip build/japlay.exe SDL2*.dll
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
