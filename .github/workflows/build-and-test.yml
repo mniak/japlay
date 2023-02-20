@@ -37,10 +37,10 @@ jobs:
         if: matrix.os == 'windows-latest'
 
       - name: Download dependencies
-        run: go mod download
+        run: go mod download -x
 
       - name: Build
-        run: go build -v ./...
+        run: go build -x ./...
         timeout-minutes: 10
 
       - name: Test
