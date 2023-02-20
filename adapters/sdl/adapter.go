@@ -90,13 +90,13 @@ func (ad *sdlAdapter) Finish() {
 	if ad.context.font != nil {
 		ad.context.font.Close()
 	}
+	if err := ad.context.data.Destroy(); err != nil {
+		log.Error(err, "failed to destroy render data")
+	}
 	if ad.context.renderer != nil {
 		if err := ad.context.renderer.Destroy(); err != nil {
 			log.Error(err, "failed to destroy background")
 		}
-	}
-	if err := ad.context.data.Destroy(); err != nil {
-		log.Error(err, "failed to destroy render data")
 	}
 	if ad.window != nil {
 		if err := ad.window.Destroy(); err != nil {
