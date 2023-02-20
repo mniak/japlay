@@ -5,7 +5,7 @@ import (
 )
 
 var cmdRoot = &cobra.Command{
-	Use: "player",
+	Use: "japlay",
 }
 
 func main() {
