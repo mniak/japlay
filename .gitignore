@@ -22,4 +22,4 @@ go.work
 
 **/__debug_bin
 release/
-player
+japlay*
