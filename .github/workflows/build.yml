@@ -56,7 +56,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: release-${{ matrix.slug }}
+          name: release-${{ matrix.slug }}-${{github.ref_name}}
           path: release/japlay-${{github.ref_name}}-${{ matrix.slug }}.tar.gz
 
   build-windows:
@@ -121,7 +121,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: release-windows
+          name: release-windows-${{github.ref_name}}
           path: release/japlay-${{github.ref_name}}-windows.zip
 
   release:
@@ -137,19 +137,19 @@ jobs:
       - name: Download linux artifacts
         uses: actions/download-artifact@v3
         with:
-          name: release-linux
+          name: release-linux-${{github.ref_name}}
           path: release/japlay-linux.tar.gz
 
       - name: Download macos artifacts
         uses: actions/download-artifact@v3
         with:
-          name: release-darwin
+          name: release-darwin-${{github.ref_name}}
           path: release/japlay-darwin.tar.gz
 
       - name: Download windows artifacts
         uses: actions/download-artifact@v3
         with:
-          name: release-windows
+          name: release-windows-${{github.ref_name}}
           path: release/japlay-windows.zip
 
       - name: Release
