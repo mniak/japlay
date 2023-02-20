@@ -36,8 +36,8 @@ jobs:
       - name: Build
         timeout-minutes: 10
         run: |
-          mkdir -p release/${{ matrix.slug }}
-          go build -x -o release/japlay ./cmd/
+          mkdir -p build/${{ matrix.slug }}
+          go build -x -o build/japlay ./cmd/
 
       - name: Test
         run: go test -v ./... -coverprofile=coverage.txt -covermode=atomic
@@ -47,7 +47,9 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
 
       - name: Pack files
-        run: tar -cvf release/japlay.tar.gz release/japlay
+        run: |
+          mkdir -p release/
+          tar -cvf release/japlay_${{ matrix.slug }}.tar.gz build/japlay
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
