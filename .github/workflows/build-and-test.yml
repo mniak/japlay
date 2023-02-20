@@ -2,35 +2,50 @@ name: Build and Test
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
 
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: "1.20.1"
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.20.1"
 
-    - name: Download dependencies
-      run: go mod download
+      - name: Install SDL2 on Ubuntu
+        run: sudo apt-get install libsdl2{,-image,-mixer,-ttf,-gfx}-dev
+        if: matrix.os == 'ubuntu-latest'
 
-    - name: Build
-      run: go build -v ./...
-      timeout-minutes: 10
+      - name: Install SDL2 on MacOS
+        run: brew install sdl2{,_image,_mixer,_ttf,_gfx} pkg-config
+        if: matrix.os == 'macos-latest'
+        
+      - name: Install SDL2 on MacOS
+        run: sudo choco install sdl2
+        if: matrix.os == 'windows-latest'
 
-    - name: Test
-      run: go test -v ./... -coverprofile=coverage.txt -covermode=atomic
+      - name: Download dependencies
+        run: go mod download
 
-    - name: Upload coverage to Codecov
-      run: bash <(curl -s https://codecov.io/bash)
-      if: matrix.os == 'ubuntu-latest'
+      - name: Build
+        run: go build -v ./...
+        timeout-minutes: 10
+
+      - name: Test
+        run: go test -v ./... -coverprofile=coverage.txt -covermode=atomic
+
+      - name: Upload coverage to Codecov
+        run: bash <(curl -s https://codecov.io/bash)
+        if: matrix.os == 'ubuntu-latest'
