@@ -1,6 +1,9 @@
 package main
 
 import (
+	"path/filepath"
+	"strconv"
+
 	player "github.com/mniak/japlayer"
 	"github.com/mniak/japlayer/adapters/sdl"
 	"github.com/mniak/japlayer/adapters/sqlite"
@@ -12,26 +15,35 @@ import (
 
 func init() {
 	cmdRoot.AddCommand(cmdPlay)
+
+	cmdPlay.Flags().StringP("config-dir", "c", "config", "Path to the 'config' directory, where the database, the images and music is stored.")
+	cmdPlay.Flags().Float32("font-size", 96, "Specify the font size")
 }
 
 var cmdPlay = &cobra.Command{
 	Use:   "play DATABASE",
 	Short: "Play a hymn",
-	Args:  cobra.ExactArgs(2),
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		dbFilePath := args[0]
-		// hymnName := args[1]
+		hymnNumber := lo.Must(strconv.Atoi(args[0]))
+		fontSize := lo.Must(cmd.Flags().GetFloat32("font-size"))
+		configDir := lo.Must(cmd.Flags().GetString("config-dir"))
 
-		sqliteAdapter := lo.Must(sqlite.NewAdapter(dbFilePath))
+		imagesDir := filepath.Join(configDir, "imagens")
+		musicDir := filepath.Join(configDir, "musicas")
+
+		dbFilename := filepath.Join(configDir, "DB.db")
+		fontFilename := filepath.Join(configDir, "fontes/din-condensed-bold.ttf")
+
+		sqliteAdapter := lo.Must(sqlite.NewAdapter(dbFilename))
 		defer sqliteAdapter.Close()
 
 		lo.Must0(sdl.Init())
 		defer sdl.Quit()
 
-		// consoleAdapter := console.NewAdapter()
 		sdlAdapter := lo.Must(sdl.NewAdapter(sdl.AdapterParams{
-			FontPath: "config/fontes/din-condensed-bold.ttf",
-			FontSize: 96,
+			FontPath: fontFilename,
+			FontSize: fontSize,
 		}))
 		defer sdlAdapter.Finish()
 
@@ -40,9 +52,9 @@ var cmdPlay = &cobra.Command{
 			// Display:    consoleAdapter,
 			Display:     sdlAdapter,
 			AudioPlayer: sdlAdapter,
-			ImagesDir:   "config/imagens",
-			MusicDir:    "config/musicas",
+			ImagesDir:   imagesDir,
+			MusicDir:    musicDir,
 		}
-		lo.Must0(app.PresentLyrics())
+		lo.Must0(app.PresentLyrics(hymnNumber))
 	},
 }

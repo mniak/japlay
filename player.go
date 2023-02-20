@@ -18,7 +18,7 @@ type Player struct {
 
 const santoSantoSantoID = "1728"
 
-func (p *Player) PresentLyrics() error {
+func (p *Player) PresentLyrics(hymnNumber int) error {
 	song, err := p.SongLoader.SongByID(santoSantoSantoID)
 	if err != nil {
 		return err
@@ -54,7 +54,6 @@ func (p *Player) PresentLyrics() error {
 			fmt.Println("Empty verse at", verse.Time)
 		}
 
-		// time.Sleep(2 * time.Second)
 		p.Display.ShowVerse(strings.Split(verse.Text, "\n")...)
 	}
 
