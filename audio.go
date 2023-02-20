@@ -5,4 +5,5 @@ type AudioPlayer interface {
 	Play() error
 	// Pause() error
 	// Seek(time time.Duration)
+	Wait()
 }

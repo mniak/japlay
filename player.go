@@ -57,5 +57,9 @@ func (p *Player) PresentLyrics() error {
 		// time.Sleep(2 * time.Second)
 		p.Display.ShowVerse(strings.Split(verse.Text, "\n")...)
 	}
+
+	p.AudioPlayer.Wait()
+	fmt.Println("Waiting last second")
+	time.Sleep(1 * time.Second)
 	return nil
 }

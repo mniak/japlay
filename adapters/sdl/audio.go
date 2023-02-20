@@ -1,6 +1,8 @@
 package sdl
 
 import (
+	"time"
+
 	"github.com/veandco/go-sdl2/mix"
 )
 
@@ -32,3 +34,9 @@ func (ad *sdlAdapter) Play() error {
 // 	}
 // 	return nil
 // }
+
+func (ad *sdlAdapter) Wait() {
+	for mix.PlayingMusic() {
+		time.Sleep(100 * time.Millisecond)
+	}
+}
