@@ -2,8 +2,8 @@ package sdl
 
 import (
 	"image/color"
-	"log"
 
+	"github.com/mniak/japlayer/log"
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/ttf"
 )
@@ -18,7 +18,7 @@ func (data *RenderData) Patch(new RenderData) {
 	if new.Background != nil {
 		if data.Background != nil {
 			if err := data.Background.Destroy(); err != nil {
-				log.Println("Faild to destroy background while replacing it", err)
+				log.Error(err, "faild to destroy background while replacing it")
 			}
 		}
 		data.Background = new.Background

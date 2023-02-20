@@ -3,9 +3,9 @@ module github.com/mniak/japlayer
 go 1.20
 
 require (
-	github.com/arch-mage/mdb v0.0.3
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/mattn/go-sqlite3 v1.14.16
+	github.com/pkg/errors v0.9.1
 	github.com/samber/lo v1.37.0
 	github.com/spf13/cobra v1.6.1
 	github.com/stretchr/testify v1.8.1

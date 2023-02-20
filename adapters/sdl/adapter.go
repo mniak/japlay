@@ -1,8 +1,7 @@
 package sdl
 
 import (
-	"log"
-
+	"github.com/mniak/japlayer/log"
 	"github.com/veandco/go-sdl2/mix"
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/ttf"
@@ -93,15 +92,15 @@ func (ad *sdlAdapter) Finish() {
 	}
 	if ad.context.renderer != nil {
 		if err := ad.context.renderer.Destroy(); err != nil {
-			log.Println("Faild to destroy background while replacing it", err)
+			log.Error(err, "Faild to destroy background while replacing it")
 		}
 	}
 	if err := ad.context.data.Destroy(); err != nil {
-		log.Println("Faild to destroy background while replacing it", err)
+		log.Error(err, "Faild to destroy background while replacing it")
 	}
 	if ad.window != nil {
 		if err := ad.window.Destroy(); err != nil {
-			log.Println("Faild to destroy background while replacing it", err)
+			log.Error(err, "Faild to destroy background while replacing it")
 		}
 	}
 }
