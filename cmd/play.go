@@ -55,6 +55,11 @@ var cmdPlay = &cobra.Command{
 			ImagesDir:   imagesDir,
 			MusicDir:    musicDir,
 		}
+		go sdl.HandleEvents(player.EventHandler{
+			Quit: func() {
+				app.Stop()
+			},
+		})
 		lo.Must0(app.PresentLyrics(hymnNumber))
 	},
 }
