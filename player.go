@@ -16,10 +16,12 @@ type Player struct {
 	MusicDir  string
 }
 
-const santoSantoSantoID = "1728"
+const (
+	hasd2022 = 712
+)
 
 func (p *Player) PresentLyrics(hymnNumber int) error {
-	song, err := p.SongLoader.SongByID(santoSantoSantoID)
+	song, err := p.SongLoader.AlbumTrack(hasd2022, hymnNumber)
 	if err != nil {
 		return err
 	}
@@ -47,7 +49,7 @@ func (p *Player) PresentLyrics(hymnNumber int) error {
 	startTime := time.Now()
 	for _, verse := range song.Verses {
 		absoluteVerseTime := startTime.Add(verse.Time)
-		relativeVerseTime := absoluteVerseTime.Sub(time.Now())
+		relativeVerseTime := time.Until(absoluteVerseTime)
 		time.Sleep(relativeVerseTime)
 
 		if len(strings.TrimSpace(verse.Text)) == 0 {

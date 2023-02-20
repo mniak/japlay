@@ -6,6 +6,35 @@ import (
 	player "github.com/mniak/japlayer"
 )
 
+func (ad *sqliteAdapter) AlbumTrack(albumID, track int) (player.Song, error) {
+	const script = `
+		select ID_MUSICA
+		from ALBUM_MUSICAS
+		where ID_ALBUM = ? and FAIXA = ?
+	`
+	dbrow := ad.db.QueryRowx(script, albumID, track)
+
+	if dbrow.Err() != nil {
+		return player.Song{}, dbrow.Err()
+	}
+
+	var row struct {
+		SongID string `db:"ID_MUSICA"`
+	}
+	err := dbrow.StructScan(&row)
+	if err != nil {
+		return player.Song{}, err
+	}
+
+	song, err := ad.songByID(row.SongID)
+	if err != nil {
+		return player.Song{}, err
+	}
+
+	song.Verses, err = ad.versesBySongID(row.SongID)
+	return song, err
+}
+
 func (ad *sqliteAdapter) SongByID(songID string) (player.Song, error) {
 	song, err := ad.songByID(songID)
 	if err != nil {
