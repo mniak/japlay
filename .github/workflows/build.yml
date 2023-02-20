@@ -131,6 +131,8 @@ jobs:
     needs:
       - build
       - build-windows
+    permissions:
+      contents: write
     steps:
       - name: Download linux artifacts
         uses: actions/download-artifact@v3
