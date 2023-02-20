@@ -3,7 +3,7 @@ package console
 import (
 	"fmt"
 
-	"github.com/mniak/louvorja/player"
+	player "github.com/mniak/japlayer"
 )
 
 type consoleAdapter struct{}

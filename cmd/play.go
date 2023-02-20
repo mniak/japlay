@@ -1,13 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"io"
-
-	"github.com/mniak/louvorja/player"
-	"github.com/mniak/louvorja/player/adapters/sdl"
-	"github.com/mniak/louvorja/player/adapters/sqlite"
-	"github.com/mniak/louvorja/player/songs"
+	player "github.com/mniak/japlayer"
+	"github.com/mniak/japlayer/adapters/sdl"
+	"github.com/mniak/japlayer/adapters/sqlite"
 	"github.com/samber/lo"
 	"github.com/spf13/cobra"
 
@@ -49,34 +45,4 @@ var cmdPlay = &cobra.Command{
 		}
 		lo.Must0(app.PresentLyrics())
 	},
-}
-
-func playHymn(mdbfile io.ReadSeeker, _ string) error {
-	db, err := songs.LoadDatabaseFromMDB(mdbfile)
-	if err != nil {
-		return err
-	}
-
-	albums, err := db.Albums()
-	if err != nil {
-		return err
-	}
-
-	hinario := albums[0]
-	songs, err := hinario.Songs()
-	if err != nil {
-		return err
-	}
-
-	song := songs[0]
-	lyrics, err := song.Lyrics()
-	if err != nil {
-		return err
-	}
-
-	for _, verse := range lyrics {
-		fmt.Print(verse.Text)
-	}
-
-	return nil
 }

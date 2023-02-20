@@ -1,5 +1,5 @@
 package sdl
 
-import "github.com/mniak/louvorja/player"
+import player "github.com/mniak/japlayer"
 
 var _ player.Display = &sdlAdapter{}

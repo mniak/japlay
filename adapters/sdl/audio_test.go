@@ -1,7 +1,7 @@
 package sdl
 
 import (
-	"github.com/mniak/louvorja/player"
+	player "github.com/mniak/japlayer"
 )
 
 var _ player.AudioPlayer = &sdlAdapter{}

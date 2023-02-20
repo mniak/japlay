@@ -3,7 +3,7 @@ package sqlite
 import (
 	"database/sql"
 
-	"github.com/mniak/louvorja/player"
+	player "github.com/mniak/japlayer"
 )
 
 func (ad *sqliteAdapter) SongByID(songID string) (player.Song, error) {
