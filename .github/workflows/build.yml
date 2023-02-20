@@ -138,19 +138,19 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: release-linux-${{github.ref_name}}
-          path: release/japlay-linux.tar.gz
+          path: release/japlay-${{github.ref_name}}-linux.tar.gz
 
       - name: Download macos artifacts
         uses: actions/download-artifact@v3
         with:
           name: release-darwin-${{github.ref_name}}
-          path: release/japlay-darwin.tar.gz
+          path: release/japlay-${{github.ref_name}}-darwin.tar.gz
 
       - name: Download windows artifacts
         uses: actions/download-artifact@v3
         with:
           name: release-windows-${{github.ref_name}}
-          path: release/japlay-windows.zip
+          path: release/japlay-${{github.ref_name}}-windows.zip
 
       - name: Release
         uses: softprops/action-gh-release@v1
