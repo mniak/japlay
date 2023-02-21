@@ -18,6 +18,7 @@ func init() {
 
 	cmdPlay.Flags().StringP("config-dir", "c", "config", "Path to the 'config' directory, where the database, the images and music is stored.")
 	cmdPlay.Flags().Float32("font-size", 96, "Specify the font size")
+	cmdPlay.Flags().Bool("windowed", false, "Don't use full screen, but open in a window")
 }
 
 var cmdPlay = &cobra.Command{
@@ -28,6 +29,7 @@ var cmdPlay = &cobra.Command{
 		hymnNumber := lo.Must(strconv.Atoi(args[0]))
 		fontSize := lo.Must(cmd.Flags().GetFloat32("font-size"))
 		configDir := lo.Must(cmd.Flags().GetString("config-dir"))
+		windowed := lo.Must(cmd.Flags().GetBool("windowed"))
 
 		imagesDir := filepath.Join(configDir, "imagens")
 		musicDir := filepath.Join(configDir, "musicas")
@@ -42,14 +44,14 @@ var cmdPlay = &cobra.Command{
 		defer sdl.Quit()
 
 		sdlAdapter := lo.Must(sdl.SDLAdapter(sdl.AdapterParams{
-			FontPath: fontFilename,
-			FontSize: fontSize,
+			FontPath:   fontFilename,
+			FontSize:   fontSize,
+			Fullscreen: !windowed,
 		}))
 		defer sdlAdapter.Finish()
 
 		app := player.Player{
-			SongLoader: sqliteAdapter,
-			// Display:    consoleAdapter,
+			SongLoader:  sqliteAdapter,
 			Display:     sdlAdapter,
 			AudioPlayer: sdlAdapter,
 			ImagesDir:   imagesDir,
