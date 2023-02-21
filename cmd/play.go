@@ -41,7 +41,7 @@ var cmdPlay = &cobra.Command{
 		lo.Must0(sdl.Init())
 		defer sdl.Quit()
 
-		sdlAdapter := lo.Must(sdl.NewAdapter(sdl.AdapterParams{
+		sdlAdapter := lo.Must(sdl.SDLAdapter(sdl.AdapterParams{
 			FontPath: fontFilename,
 			FontSize: fontSize,
 		}))
