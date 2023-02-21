@@ -29,15 +29,25 @@ func DisplayAdapter(params AdapterParams) (ad *displayAdapter, err error) {
 		return
 	}
 
-	mode, err := sdl.GetCurrentDisplayMode(params.Display)
-	if err != nil {
-		return
-	}
+	var window *sdl.Window
+	var renderer *sdl.Renderer
+	if params.Fullscreen {
+		var mode sdl.DisplayMode
+		mode, err = sdl.GetCurrentDisplayMode(params.Display)
+		if err != nil {
+			return
+		}
 
-	window, renderer, err := sdl.CreateWindowAndRenderer(
-		mode.W, mode.H,
-		sdl.WINDOW_HIDDEN|sdl.WINDOW_FULLSCREEN,
-	)
+		window, renderer, err = sdl.CreateWindowAndRenderer(
+			mode.W, mode.H,
+			sdl.WINDOW_HIDDEN|sdl.WINDOW_FULLSCREEN,
+		)
+	} else {
+		window, renderer, err = sdl.CreateWindowAndRenderer(
+			800, 600,
+			sdl.WINDOW_SHOWN,
+		)
+	}
 	ad.window = window
 	ad.context.renderer = renderer
 	if err != nil {

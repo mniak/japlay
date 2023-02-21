@@ -32,6 +32,7 @@ type AdapterParams struct {
 	FontSize   float32
 	LetterCase LetterCase
 	Display    int
+	Fullscreen bool
 }
 
 type sdlAdapter struct {
